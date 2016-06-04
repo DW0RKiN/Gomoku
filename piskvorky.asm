@@ -164,7 +164,7 @@ el_selfmodifying:
 	ld	a,0				; nastaveni smeru
 	ex	(sp),hl
 	call	Pohyb		
-	ld	a,(hl)			; 
+	ld	a,(hl)				; 
 	and	MASK_COLOR			; chceme jen barvu PAPER
 	ex	(sp),hl
 	jr	nz,el_nasel_kamen
@@ -186,7 +186,7 @@ el_selfmodifying:
 	jr	el_next	
 
 ; ---------------
-el_nasel_kamen:				; A je nenulove
+el_nasel_kamen:					; A je nenulove
 	cp	c				; shodne kameny?
 	jr	z,el_shodne
 
@@ -226,7 +226,7 @@ el_shodne:
 	or	a				;
 	jr	z,el_prazny
 	
-	set	6,(hl)			; zesvetlime kamen
+	set	6,(hl)				; zesvetlime kamen
 	ld	c,$01				; Existuje_rada_5_kamenu = True
 el_prazny:
 	exx
@@ -265,14 +265,15 @@ b_next:
 	ld	a,$5B				; $5800 + 3 * 256 = $5800 + $0300
 	cp	h
 	jp	nz,brain_loop
-	
-	pop	hl				; vytahneme nejlepsi ze zasobniku
-	ld	(hl), AI_COLOR		; 
-	
+
 ; C = 0, 1
 	dec	c				; Existuje_rada_5_kamenu == True?
-	ret	nz
-	ld	(hl),c			; = 0, zmensime pravdepodobnost ze 1/50 vteriny bude videt pixel navic nez smazem obrazovku
+	
+	pop	hl				; vytahneme nejlepsi ze zasobniku
+	ld	(hl), AI_COLOR			;
+
+	ret	nz				; C = $00, $ff
+	ld	(hl),c				; = 0, zmensime pravdepodobnost ze 1/50 vteriny bude videt pixel navic nez smazem obrazovku
 ; propadnuti na Repeat_game
 
 
@@ -288,14 +289,14 @@ clear_loop:
 	ld	(hl),$00			; 2
 	inc	hl				; 1
 	cp	h				; 1
-	jr	nz,clear_loop		; 2
+	jr	nz,clear_loop			; 2
 
 IF 0
 ; clear screen
 	ld	bc,192*32+3*256-1		; 3
 	ld	de,$4001			; 3
 	ld	hl,$4000			; 3
-	ld	(hl),l			; 1 = 0
+	ld	(hl),l				; 1 = 0
 	ldir					; 2
 						; BC = 0
 ENDIF
@@ -314,7 +315,7 @@ Cti_vstup:
 	cp	d
 	ld	d,a
 	
-	ld	(hl),e			; vratim puvodni
+	ld	(hl),e				; vratim puvodni
 	
 	call	nz,Pohyb	
 	jr	Cti_vstup
