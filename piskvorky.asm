@@ -9,7 +9,7 @@ AI_COLOR		equ	2*8
 MASK_COLOR		equ	$38
 
 ; Start game from basic
-; RANDOMIZE USR 50389 (0xC4D5) = progStart + 213 (+ $00D5)
+; RANDOMIZE USR 50378 (0xC4CA) = progStart + 202 (+ $00CA)
 
 ; ----------------------------------------------------
 ; Vstup: 	HL XY souradnice
@@ -267,29 +267,15 @@ b_next:
 	jp	nz,brain_loop
 	
 	pop	hl				; vytahneme nejlepsi ze zasobniku
+	ld	(hl), AI_COLOR		; 
+	
 ; C = 0, 1
 	dec	c				; Existuje_rada_5_kamenu == True?
-	jr	z,Repeat_game
-
-	ld	(hl), AI_COLOR		; 
-	ret
-
-
-; -------------------------------
-pricti_hodnotu_rady:
-
-	ld	a,ixl				; delka rady
-	cp	$06				; je tam pricten uz i odlisny kamen
-	ret	c				; pokud ma rada i s mezerama delku kratsi jak 5 tak nema zadnou hodnotu
-
-	add	hl,de				; H = H + D, v L a E (pocet prazdnych) je "smeti" jehoz soucet nikdy nepretece pres bajt. Pokud se sejdou jednickove bity tak je L nizke. 
-	ld	d,h
-	add	ix,de				; IXH = IXH + D, IXL si zaneradime souctem puvodni delky rady s poctem jeho prazdnych poli, ale bude se menit
-
-	ret
+	ret	nz
+	ld	(hl),c			; = 0, zmensime pravdepodobnost ze 1/50 vteriny bude videt pixel navic nez smazem obrazovku
+; propadnuti na Repeat_game
 
 
-	
 ; --------------------------------
 Repeat_game:
 	pop	hl				; vytahneme nepouzitou adresu navratu pro ret
@@ -332,9 +318,22 @@ Cti_vstup:
 	
 	call	nz,Pohyb	
 	jr	Cti_vstup
-	
 
-	
+
+; -------------------------------
+pricti_hodnotu_rady:
+
+	ld	a,ixl				; delka rady
+	cp	$06				; je tam pricten uz i odlisny kamen
+	ret	c				; pokud ma rada i s mezerama delku kratsi jak 5 tak nema zadnou hodnotu
+
+	add	hl,de				; H = H + D, v L a E (pocet prazdnych) je "smeti" jehoz soucet nikdy nepretece pres bajt. Pokud se sejdou jednickove bity tak je L nizke. 
+	ld	d,h
+	add	ix,de				; IXH = IXH + D, IXL si zaneradime souctem puvodni delky rady s poctem jeho prazdnych poli, ale bude se menit
+
+	ret
+
+
 ;	4	3	2	1	0
 ;	F(5)	↑(4)	↓(3)	→(2)	←(1)	Sinclair 1 (Sinclair left)
 data_priznak_smeru:
