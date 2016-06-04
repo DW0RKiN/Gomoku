@@ -8,45 +8,8 @@ PLAYER_COLOR	equ	1*8
 AI_COLOR		equ	2*8
 MASK_COLOR		equ	$38
 
-; clear screen
-	ld	hl,$4000			; 3
-	ld	a,$5B				; 2
-clear_loop:
-	ld	(hl),$00			; 2
-	inc	hl				; 1
-	cp	h				; 1
-	jr	nz,clear_loop		; 2
-
-IF 0
-; clear screen
-	ld	bc,192*32+3*256-1		; 3
-	ld	de,$4001			; 3
-	ld	hl,$4000			; 3
-	ld	(hl),l			; 1 = 0
-	ldir					; 2
-						; BC = 0
-ENDIF
-
-; umistime na stred a polozime kamen AI
-	ld	hl,$598F
-	ld	(hl),AI_COLOR		
-					
-Cti_vstup:
-	ld	e,(hl)
-	ld	(hl),$B8			; 
-
-	ld	bc,0xf7fe			;
-	in	a,(c)				;
-	cpl
-	cp	d
-	ld	d,a
-	
-	ld	(hl),e			; vratim puvodni
-	
-	call	nz,Pohyb	
-	jr	Cti_vstup
-
-
+; Start game from basic
+; RANDOMIZE USR 50389 (0xC4D5) = progStart + 213 (+ $00D5)
 
 ; ----------------------------------------------------
 ; Vstup: 	HL XY souradnice
@@ -216,9 +179,8 @@ el_selfmodifying:
 	cp	5
 	jr	z,el_next			;
 
-	ld	a,h
-	add	a,d
-	ld	d,a
+	add	hl,de				; H = H + D, v L a E (pocet prazdnych) je "smeti" jehoz soucet nikdy nepretece pres bajt. Pokud se sejdou jednickove bity tak je L nizke. 
+	ld	d,h
 	
 	ld	hl,$0010			; dostane bonus i pro priste
 	jr	el_next	
@@ -239,8 +201,8 @@ el_ruzne:
 	
 	ld	hl,$0008
 	ld	d,h
-	
-	inc	e
+
+	inc	e				; 
 	ld 	ixl,e				; delka nove rady = prazdnych + 1 kamen
 	dec	e
 	jr	z,el_shodne
@@ -304,12 +266,11 @@ b_next:
 	cp	h
 	jp	nz,brain_loop
 	
+	pop	hl				; vytahneme nejlepsi ze zasobniku
 ; C = 0, 1
 	dec	c				; Existuje_rada_5_kamenu == True?
-Konec_hry:
-	jr	z,Konec_hry
+	jr	z,Repeat_game
 
-	pop	hl				; vytahneme nejlepsi ze zasobniku
 	ld	(hl), AI_COLOR		; 
 	ret
 
@@ -318,16 +279,60 @@ Konec_hry:
 pricti_hodnotu_rady:
 
 	ld	a,ixl				; delka rady
-	cp	$06
-	ret	c				; pokud ma rada velikost mensi jak 5 tak nema zadnou hodnotu
+	cp	$06				; je tam pricten uz i odlisny kamen
+	ret	c				; pokud ma rada i s mezerama delku kratsi jak 5 tak nema zadnou hodnotu
 
-	ld	a,h
-	add	a,d
-	
-	add	a,ixh
-	ld	ixh,a
+	add	hl,de				; H = H + D, v L a E (pocet prazdnych) je "smeti" jehoz soucet nikdy nepretece pres bajt. Pokud se sejdou jednickove bity tak je L nizke. 
+	ld	d,h
+	add	ix,de				; IXH = IXH + D, IXL si zaneradime souctem puvodni delky rady s poctem jeho prazdnych poli, ale bude se menit
 
 	ret
+
+
+	
+; --------------------------------
+Repeat_game:
+	pop	hl				; vytahneme nepouzitou adresu navratu pro ret
+
+New_game:
+; clear screen
+	ld	hl,$4000			; 3
+	ld	a,$5B				; 2
+clear_loop:
+	ld	(hl),$00			; 2
+	inc	hl				; 1
+	cp	h				; 1
+	jr	nz,clear_loop		; 2
+
+IF 0
+; clear screen
+	ld	bc,192*32+3*256-1		; 3
+	ld	de,$4001			; 3
+	ld	hl,$4000			; 3
+	ld	(hl),l			; 1 = 0
+	ldir					; 2
+						; BC = 0
+ENDIF
+
+; umistime na stred a polozime kamen AI
+	ld	hl,$598F
+	ld	(hl),AI_COLOR		
+					
+Cti_vstup:
+	ld	e,(hl)
+	ld	(hl),$B8			; 
+
+	ld	bc,0xf7fe			;
+	in	a,(c)				;
+	cpl
+	cp	d
+	ld	d,a
+	
+	ld	(hl),e			; vratim puvodni
+	
+	call	nz,Pohyb	
+	jr	Cti_vstup
+	
 
 	
 ;	4	3	2	1	0
