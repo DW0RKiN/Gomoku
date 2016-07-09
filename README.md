@@ -36,7 +36,7 @@ Kde port:
 	$BFFE  1 0 1 1 1 1 1 1  1 1 1 1 1 1 1 0     Enter L     K     J     H
 	$7FFE  0 1 1 1 1 1 1 1  1 1 1 1 1 1 1 0     Space Sym   M     N     B
 
-Pokud po čtení obsahuje nějaký bit registru A nulu tak to signalizuje stisk klávesy. Pokud se před čtením přidá do vyššího bajtu portu (do registru "B") víc nulovych bitů tak se čte najednou víc částí, ale už nejde rozlišit zda bit 0 signalizuje klávesů V nebo G například.
+Pokud po čtení obsahuje nějaký bit registru A nulu tak to signalizuje stisk klávesy. Pokud se před čtením přidá do vyššího bajtu portu (do registru "B") víc nulovych bitů tak se čte najednou víc částí, ale už nejde rozlišit zda bit 4 signalizuje klávesů V nebo G například.
 
 Později jsem se dozvěděl, že existuje o bajt kratší varianta:
 
