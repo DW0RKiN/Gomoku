@@ -3,10 +3,10 @@ Gomoku
 
 Minimalistické piškvorky pod 256 bajtů nepoužívající žádnou ROM rutinu nebo paměť obsahující font. Omezení vyplývá ze zadání:
 
-Z80 Assembly Programming On The ZX Spectrum
-Adrian Brown
-11 květen · Lewannick, Anglie, Spojené království
-
+	Z80 Assembly Programming On The ZX Spectrum
+	Adrian Brown
+	11 květen · Lewannick, Anglie, Spojené království
+	
 	COMPO #6 - 256 byte game compo
 	DEADLINE: 12:00 GMT 17th June 2016
 	1) No ROM routines (else their size will be added on)
