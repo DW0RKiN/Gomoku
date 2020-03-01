@@ -1,7 +1,22 @@
-Gomoku
-======
+# Gomoku
 
-Minimalistické piškvorky pod 256 bajtů nepoužívající žádnou ROM rutinu nebo paměť obsahující font. Omezení vyplývá ze zadání:
+## Description
+
+Minimalistic gomoku under 256 bytes without using ROM or external data. So they handle the graphics and keyboard control themselves. The AI starts and you have one extra turn to get a draw. A series of 5 marks in a row wins.
+
+## Control
+
+`1` left
+
+`2` right
+
+`3` down
+
+`4` up
+
+`5` fire/place the marker
+
+## Assignment
 
 	Z80 Assembly Programming On The ZX Spectrum
 	Adrian Brown
