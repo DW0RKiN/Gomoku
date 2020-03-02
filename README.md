@@ -2,7 +2,9 @@
 
 ## Description
 
-Minimalistic gomoku under 256 bytes without using ROM or external data. So they handle the graphics and keyboard control themselves. The AI starts and you have one extra turn to get a draw. A series of 5 marks in a row wins.
+Minimalistic gomoku under 256 bytes without using ROM or external data. So they handle the graphics and keyboard control themselves. The AI starts and you have one extra turn to get a draw. A series of 5 marks in a row wins. The margins are set so that they overlap in the opposite direction so that they do not exist.
+
+Hint: If you play the first stone well below the first stone, AI will start blocking your turn.
 
 ## Control
 
